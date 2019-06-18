@@ -1,0 +1,11 @@
+version: '3'
+services:
+  prof:
+    build: .
+    container_name: "$APP_CONT_NAME"
+    environment:
+      PORT: "$APP_PORT"
+    ports:
+      - "$APP_CONT_PORT:$APP_PORT"
+    volumes:
+      - .:/usr/src/app
