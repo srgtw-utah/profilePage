@@ -4,8 +4,10 @@ services:
     build: .
     container_name: "$APP_CONT_NAME"
     environment:
-      PORT: "$APP_PORT"
+      PORT: "$PORT"
+      NODE_ENV: "$NODE_ENV"
     ports:
-      - "$APP_CONT_PORT:$APP_PORT"
+      - "$APP_CONT_PORT:$PORT"
     volumes:
       - .:/usr/src/app
+      - /usr/src/app/node_modules

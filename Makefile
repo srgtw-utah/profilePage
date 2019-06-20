@@ -12,21 +12,15 @@ up:
 	docker-compose up -d
 	@sleep 1 # wait for server process is running.
 
-all: image up test
+all: clean build up test
 
-image: node
+build:
 	docker-compose build --force-rm --no-cache
-
-# fixme sharering directory, fail npm i on container.
-node: node_modules
-node_modules: package.json package-lock.json
-	npm i
 
 bash:
 	$(DOCKER) exec -it $(APP_CONT_NAME) bash
 
 destroy: clean
-	rm -rf node_nodules
 	-docker kill $$(docker ps -aq)
 	-docker rm -f $$(docker ps -aq)
 	-docker images -a | awk '/<none>/ {print $$3}' | xargs docker rmi -f
@@ -38,6 +32,5 @@ clean:
 	docker-compose down --rmi all
 
 test:
-	curl -s $(APP_URL)/
-	curl -s $(APP_URL)/osawa/
-	curl -s $(APP_URL)/takeya/
+	@printf "%s..." "GET $(APP_URL)/"
+	@(($$(curl $(APP_URL)/ -o /dev/null -sw '%{response_code}') == 200)) && echo OK || echo NG
